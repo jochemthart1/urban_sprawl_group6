@@ -195,7 +195,7 @@ to place-new-service-center
   ;; implement your function here
   ;; you may need to add inputs for this function
   ;;++++++++++++++++++++++++++++++++++++++++++++++
-  ;;
+  ;;set default shape[] ;vormpje voor huisje service center
 
   compute-distance-quality
 end
