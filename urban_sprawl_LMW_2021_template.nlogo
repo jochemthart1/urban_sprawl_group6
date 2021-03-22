@@ -146,7 +146,15 @@ to compute-distance-quality
   ;;++++++++++++++++++++++++++++++++++++++++++++++
   ;; implement your function here
   ;; you may need to add inputs for this function
+  ;;
+  ;; for each patch set distance-quality to distance to nearest service center
   ;;++++++++++++++++++++++++++++++++++++++++++++++
+  ;;
+  ;; ask study-area-patches
+  ;;  [
+  ;;  set distance-quality ...
+  ;;  ]
+  ;;
 end
 
 
@@ -154,7 +162,15 @@ to compute-aesthetic-quality
   ;;++++++++++++++++++++++++++++++++++++++++++++++
   ;; implement your function here
   ;; you may need to add inputs for this function
+  ;;
+  ;; for each patch set aesthetic-quality to elevation
   ;;++++++++++++++++++++++++++++++++++++++++++++++
+  ;;
+  ;; ask study-area-patches
+  ;;  [
+  ;;  set aesthetic-quality ...
+  ;;  ]
+  ;;
 end
 
 
@@ -162,7 +178,15 @@ to compute-social-similarity
   ;;++++++++++++++++++++++++++++++++++++++++++++++
   ;; implement your function here
   ;; you may need to add inputs for this function
+  ;;
+  ;; for each patch set social-similarity to the average social similarity of neighborhood
   ;;++++++++++++++++++++++++++++++++++++++++++++++
+  ;;
+  ;; ask study-area-patches
+  ;;  [
+  ;;  set social-similarity ...
+  ;;  ]
+  ;;
 end
 
 
@@ -171,6 +195,9 @@ to place-new-service-center
   ;; implement your function here
   ;; you may need to add inputs for this function
   ;;++++++++++++++++++++++++++++++++++++++++++++++
+  ;;
+
+  compute-distance-quality
 end
 
 
@@ -200,7 +227,7 @@ to add-new-residents
       if (count residents) mod 1000 = 0 and ticks != 0 [place-new-service-center]
     ]
     ;; when a new service centre has been placed, the distance quality per cell has to be recomputed
-    if (count residents) mod 1000 = 0 and ticks != 0 [compute-distance-quality]
+    ;;if (count residents) mod 1000 = 0 and ticks != 0 [compute-distance-quality]
   ]
 
 end
