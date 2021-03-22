@@ -182,6 +182,8 @@ to compute-social-similarity
   ;; for each patch set social-similarity to the average social similarity of neighborhood
   ;;++++++++++++++++++++++++++++++++++++++++++++++
   ;;
+  ;; what is social similarity?
+  ;;
   ;; ask study-area-patches
   ;;  [
   ;;  set social-similarity ...
@@ -195,7 +197,8 @@ to place-new-service-center
   ;; implement your function here
   ;; you may need to add inputs for this function
   ;;++++++++++++++++++++++++++++++++++++++++++++++
-  ;;set default shape[] ;vormpje voor huisje service center
+  ;;
+  ;; how do we determine where the 1000th resident is located?
 
   compute-distance-quality
 end
