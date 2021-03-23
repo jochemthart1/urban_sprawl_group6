@@ -221,6 +221,8 @@ to add-new-residents
 
 
       ;;+++++++++++++++++++++++++++++++++++++++++++++++++++
+      ;;
+      ;;
       ;; implement your model here to place the residents
       ;; you may need to create additional functions
       ;;+++++++++++++++++++++++++++++++++++++++++++++++++++
