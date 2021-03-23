@@ -180,13 +180,16 @@ end
 
 
 to compute-social-similarity
-  ask study-area-patches
+  ask patches
   [
-    ;;if count service-centers-here in-radius 20 = 0
-    ifelse (count turtles-on neighbors + count turtles-here) = 0
+    ifelse (count residents-on neighbors + count residents-here) = 0
     [ set social-similarity 0.5 ]
     [
-      ;;let neighbour-selection study-area-patches with
+      let n count residents-on neighbors
+      ;;let neighbor-selection residents with [ distance myself < 1.5 ]
+      let neighbor-selection residents in-radius 1.5
+      ;;set social-similarity neighbor-selection [ (weight-distance ]
+
     ]
   ]
 
@@ -208,28 +211,41 @@ to add-new-residents
       ;; allocate
       let my-selection n-of 15 study-area-patches with [ count turtles-here = 0 ]
 
-      ;;let best-patch max-one-of my-selection [ (distance-quality * [weight-distance] of myself) + (aesthetic-quality * [weight-aesthetics] of myself) + (social-similarity * [weight-social-similarity] of myself) ]
+      ask my-selection
+      [
+        ifelse (count residents-on neighbors + count residents-here) = 0
+        [ set social-similarity 0.5 ]
+        [
+          let n count residents-on neighbors
+          let friends residents in-radius 1.5
+          set social-similarity (n / (sqrt ((sum-sq-diff [weight-distance] of myself [weight-distance] of friends) + (sum-sq-diff [weight-aesthetics] of myself [weight-aesthetics] of friends) + (sum-sq-diff [weight-social-similarity] of myself [weight-social-similarity] of friends))+ 1))
+        ]
+      ]
 
-      ;;setxy [pxcor] of best-patch [pycor] of best-patch
+      let best-patch max-one-of my-selection [ (distance-quality * [weight-distance] of myself) + (aesthetic-quality * [weight-aesthetics] of myself) + (social-similarity * [weight-social-similarity] of myself) ]
+
+      setxy [pxcor] of best-patch [pycor] of best-patch
 
       ;; new service centre for every 1000th resident
       if (count residents) mod 1000 = 0 and ticks != 0
       [
-        ;;hatch-service-centers 1
-        ;;[
-        ;;  let close-patch min-one-of study-area-patches with [ count turtles-here = 0 ] [ distance best-patch ]
-        ;;  setxy [pxcor] of close-patch [pycor] of close-patch
-        ;;  set color white
-        ;;  set size 3
-        ;;]
+        hatch-service-centers 1
+        [
+          let close-patch min-one-of study-area-patches with [ count turtles-here = 0 ] [ distance best-patch ]
+          setxy [pxcor] of close-patch [pycor] of close-patch
+          set color white
+          set size 3
+        ]
 
         compute-distance-quality
       ]
     ]
   ]
 
-  compute-social-similarity
+end
 
+to-report sum-sq-diff [#constant #listvals]
+  report reduce + (map [ thisval -> (thisval - #constant) ^ 2 ] #listvals)
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -332,7 +348,7 @@ mean-weight-distance
 mean-weight-distance
 0
 1
-0.54
+0.23
 0.01
 1
 NIL
@@ -347,7 +363,7 @@ mean-weight-aesthetics
 mean-weight-aesthetics
 0
 1
-1.0
+0.78
 0.01
 1
 NIL
@@ -362,7 +378,7 @@ mean-weight-social-similarity
 mean-weight-social-similarity
 0
 1
-0.0
+0.87
 0.01
 1
 NIL
