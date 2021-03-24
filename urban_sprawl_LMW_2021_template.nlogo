@@ -180,7 +180,7 @@ end
 
 
 to compute-social-similarity
-  ask patches
+  ask study-area-patches
   [
     ifelse (count residents-on neighbors + count residents-here) = 0
     [ set social-similarity 0.5 ]
@@ -189,7 +189,6 @@ to compute-social-similarity
       ;;let neighbor-selection residents with [ distance myself < 1.5 ]
       let neighbor-selection residents in-radius 1.5
       ;;set social-similarity neighbor-selection [ (weight-distance ]
-
     ]
   ]
 
@@ -218,10 +217,22 @@ to add-new-residents
         [
           let n count residents-on neighbors
           let friends residents in-radius 1.5
-          set social-similarity (n / (sqrt ((sum-sq-diff [weight-distance] of myself [weight-distance] of friends) + (sum-sq-diff [weight-aesthetics] of myself [weight-aesthetics] of friends) + (sum-sq-diff [weight-social-similarity] of myself [weight-social-similarity] of friends))+ 1))
+          let similarity-part (social-similarity-diff [weight-distance] of myself [weight-distance] of friends [weight-aesthetics] of myself [weight-aesthetics] of friends [weight-social-similarity] of myself [weight-social-similarity] of friends)
+          ifelse similarity-part = 0
+          [ set social-similarity 1 ]
+          [ set social-similarity (n / similarity-part) ]
+
+          let highest-similarity [ social-similarity ] of max-one-of my-selection [ social-similarity ]
+          let lowest-similarity [ social-similarity ] of min-one-of my-selection [ social-similarity ]
+
+          ask my-selection
+          [
+            set social-similarity ( social-similarity - lowest-similarity ) / highest-similarity
+          ]
         ]
       ]
 
+      ;; deze klopt nog niet volgens de functie
       let best-patch max-one-of my-selection [ (distance-quality * [weight-distance] of myself) + (aesthetic-quality * [weight-aesthetics] of myself) + (social-similarity * [weight-social-similarity] of myself) ]
 
       setxy [pxcor] of best-patch [pycor] of best-patch
@@ -244,8 +255,8 @@ to add-new-residents
 
 end
 
-to-report sum-sq-diff [#constant #listvals]
-  report reduce + (map [ thisval -> (thisval - #constant) ^ 2 ] #listvals)
+to-report social-similarity-diff [#dist-eval #dist-neighbors #aesth-eval #aesth-neighbors #social-eval #social-neighbors]
+  report reduce + (map [ [dist-list aesth-list social-list] -> ( sqrt ( (dist-list - #dist-eval) ^ 2 + (aesth-list - #aesth-eval) ^ 2 + (social-list - #social-eval) ^ 2) ) ] #dist-neighbors #aesth-neighbors #social-neighbors)
 end
 @#$#@#$#@
 GRAPHICS-WINDOW
@@ -348,7 +359,7 @@ mean-weight-distance
 mean-weight-distance
 0
 1
-0.23
+0.0
 0.01
 1
 NIL
@@ -363,7 +374,7 @@ mean-weight-aesthetics
 mean-weight-aesthetics
 0
 1
-0.78
+1.0
 0.01
 1
 NIL
