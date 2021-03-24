@@ -238,10 +238,11 @@ to add-new-residents
       ]
 
 
+      ;; laten we het de 'utility function' noemen, zoals in de paper
+      ;; let best-patch max-one-of my-selection [ (distance-quality ^ [weight-distance] of myself) + (aesthetic-quality ^ [weight-aesthetics] of myself) + (social-similarity ^ [weight-social-similarity] of myself) ]
 
       ;; utility functie oproepen, beste utility berekenen en dan beste kiezen voor de selectie
       ;; utility function based on formule 1 (Brown and Robinson, 2006)
-      ;; let best-patch max-one-of my-selection [ (distance-quality ^ [weight-distance] of myself) + (aesthetic-quality ^ [weight-aesthetics] of myself) + (social-similarity ^ [weight-social-similarity] of myself) ]
       ask my-selection [set utility (distance-quality ^ [weight-distance] of myself) + (aesthetic-quality ^ [weight-aesthetics] of myself) + (social-similarity ^ [weight-social-similarity] of myself)]
       let best-patch max-one-of my-selection [utility]
 
