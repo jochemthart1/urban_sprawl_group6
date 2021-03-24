@@ -399,7 +399,7 @@ HORIZONTAL
 ## WHAT IS IT?
 
 (a general understanding of what the model is trying to show or explain)
-The urban sprawl model is representing the urban development over an area. There are two breeds considered in this model being the residents and service centres. The urban development involves the spread of new residents over the area based on resident's preferences. Two agents are involved in the model being the residents and the service centres. The preferences of the residents to live on a specific patch are dependent on the attributes of residents and attributes of the patches. The attributes of the residents include 'distance to service centre' and 'social similarity'. The atrributes of the patches include 'aesthetic quality' and 'distance to service centre'.
+The urban sprawl model is representing the urban development over an area. There are two breeds considered in this model being the residents and service centres. The urban development involves the spread of new residents over the area based on resident's preferences. Two agents are involved in the model being the residents and the service centres. The preferences of the residents to live on a specific patch are dependent on the attributes of residents and attributes of the patches. The attributes of the residents include 'distance to service centre' and 'social similarity'. The atrributes of the patches include 'aesthetic quality' and 'distance to service centre'
 
 ## HOW IT WORKS
 
