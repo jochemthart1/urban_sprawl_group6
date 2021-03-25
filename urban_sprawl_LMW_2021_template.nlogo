@@ -398,42 +398,27 @@ HORIZONTAL
 @#$#@#$#@
 ## WHAT IS IT?
 
-(a general understanding of what the model is trying to show or explain)
-The urban sprawl model is representing the urban development over an area. There are two breeds considered in this model being the residents and service centres. The urban development involves the spread of new residents over the area based on resident's preferences. Two agents are involved in the model being the residents and the service centres. The preferences of the residents to live on a specific patch are dependent on the attributes of residents and attributes of the patches. The attributes of the residents include 'distance to service centre' and 'social similarity'. The atrributes of the patches include 'aesthetic quality' and 'distance to service centre'.
+The urban sprawl model is representing the urban development over an area. The urban development involves the spread of new residents over the area based on resident's preferences. Two agents/turtles are involved in the model being the residents and the service centres. The preferences of the residents to live on a specific patch are dependent on the attributes of residents and attributes of the patches. The attribute of the resident is 'social similarity'. The atrributes of the patches include 'aesthetic quality', which is the elevation level, and 'distance to service centre'. These attributes are normalised, to make the variations within the attributes relatively important for all attributes.
 
 ## HOW IT WORKS
 
-(what rules the agents use to create the overall behavior of the model)
 The outcome of the model depends on the behaviour of the two agents mentioned before, residents and service centres. 100 residents enter the area per iteration. The place where each of these residents will settle is dependent on three weights that link to the attributes of both the residents and the patches. The weights are: weight-distance, weight-aesthetics, weight-social-similarity. Weight-distance involves the distance of the resident to a service center, the larger the distance, the less convenient for residents. Which means the value will be closer to zero. Weight-aesthetics has a one-to-one relation with elevation. The higher the elevation, the higher the aesthetics value which makes it more likely that residents want to live there. Weight-social-similarity refers to the relation between residents. If the value for social similarity is higher, it means that residents like each other and thus are willing to live close to each other. The importance of the weights can be adjusted with use of the sliders in the interface. After each 1000th new resident, a new service centre will be built.
 
 ## HOW TO USE IT
 
-(how to use the model, including a description of each of the items in the Interface tab)
 The interface of the model consists of one main window that shows the output of the model. The single input needed for this model is a digital elevation model which in this case covers the area of Land van Maas en Waal. Furthermore, there are several sliders. The first slider can be used to set the amount of incoming residents per tick, which is set by default to 100 residents. The second slider indicates that the model should stop when a certain percentage of the area has been developed -in other words- area where residents have settled. The default is set to 15% of the area being developed. The following three sliders correspond to the weight-distance, weight-aesthetics and weight-social-similarity. Each of these three slides can be set to a value scaled between 0 and 1. Values set closer to 0 mean that the weight of the corresponding attribute is lower and thus less important. Moreover, there is a setup button that needs to be pushed when the sliders are set to the desired values, whereafter the go button can be pushed to run the model.  
 
 ## THINGS TO NOTICE
 
-(suggested things for the user to notice while running the model)
-Things to notice while running the model are mainly the difference in urban sprawl of the residents when the different wheights are adjusted. This difference can generally be noticed when around 50 ticks have been passed. Notice the elevation differences on the map. Residents settle near these areas when the weight for aesthetics is set to high. Also notice the random placement of a new service centre after every 1000th resident. 
+Things to notice while running the model are mainly the difference in urban sprawl of the residents when the varying wheights are adjusted. Patterns can generally be noticed when around 50 ticks have passed. Notice the elevation differences on the map. Residents settle near these areas when the weight for aesthetics is set to high. Also notice the random placement of a new service centre after every 1000th resident. 
 
 ## THINGS TO TRY
 
-(suggested things for the user to try to do (move sliders, switches, etc.) with the model)
 Main things to try, are moving sliders which results in different patterns for urban sprawl. For example when setting the weight for aesthetics high and the other weights lower, one can notice that the residents mainly settle in and around areas with higher elevation. Moreover when the weight for distance is set relatively high compared to the other weights, one can see that the residents settle mainly around the service centres and thus cluster more compared to the first situation described before. 
 
 ## EXTENDING THE MODEL
 
-(suggested things to add or change in the Code tab to make the model more complicated, detailed, accurate, etc.)
-Suggestions to make the model more complicated could be to add more variables. The model as it is, is very simplistic while only three variables are taken into account whereas in real life resident's settlement depends on many more variables. For example, one could try to implement housing prices based on locations or distance from main infrastructure. Moreover, at this stage the model does not take into account any form of uncertainty. For example, it is assumed that residents base their decision to live somewhere on only three variables. While taking more variables into consideration, would improve the model in the first place, also an uncertainty factor is suggested to be built in. 
-
-## NETLOGO FEATURES
-
-(interesting or unusual features of NetLogo that the model uses, particularly in the Code tab; or where workarounds were needed for missing features)
-
-## RELATED MODELS
-
-(models in the NetLogo Models Library and elsewhere which are of related interest)
-
+Suggestions to make the model more complicated could be to add more variables. The model as it is, is very simplistic while only three variables are taken into account whereas in real life resident's settlement depends on many more variables. For example, one could try to implement housing prices based on locations or distance from main infrastructure. Moreover, at this stage the model does not take into account any form of uncertainty. For example, it is assumed that residents base their decision to live somewhere on only three variables. While taking more variables into consideration, would improve the model in the first place, also an uncertainty factor is suggested to be built in. Lastly, the social similarity for every resident in this mode is the same. So the similarity is eather 0.5 when the resident has no neighbour or 1.0 when a neihbour is present. It would be realistic if people had different social simularities, as these would present various social prefferences in society.  
 
 ## CREDITS AND REFERENCES
 
