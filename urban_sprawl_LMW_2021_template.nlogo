@@ -13,7 +13,8 @@ globals
   study-area-patches
 ]
 
-;;declaring patch attributes
+;; declaring patch attributes
+;; added the attribute utility, as the paper uses this as an attribute that that the agent owns (for a specific patch)
 patches-own
 [
   elevation
@@ -21,6 +22,7 @@ patches-own
   distance-quality
   aesthetic-quality
   social-similarity
+  utility
   percentage-built-up-surroundings
 ]
 
@@ -28,6 +30,8 @@ patches-own
 breed [ service-centers service-center ]
 breed [ residents resident ]
 
+
+;; declaring what attributes the residents own
 residents-own
 [
   weight-distance
@@ -105,10 +109,10 @@ to loaddata [filename] ;;observer procedure
   ;; load data from file
   let ahn gis:load-dataset filename
 
-  ;;put everything (elevation en roughness on the netlogo
-  ;;world. You need to enter the right extent of the world
-  ;;beforehand through the gui as netlogo does not allow
-  ;;you to do by scripting
+  ;; put everything (elevation en roughness on the netlogo
+  ;; world. You need to enter the right extent of the world
+  ;; beforehand through the gui as netlogo does not allow
+  ;; you to do by scripting
   ;;----------------------------------------------------------------
   gis:set-world-envelope (gis:raster-world-envelope ahn 0 0)
   gis:apply-raster ahn elevation
@@ -180,6 +184,7 @@ end
 
 
 to compute-social-similarity
+  ;; if the patch has no residents around set social similarity to 0.5
   ask study-area-patches
   [
     ifelse (count residents-on neighbors + count residents-here) = 0
@@ -232,8 +237,14 @@ to add-new-residents
         ]
       ]
 
-      ;; deze klopt nog niet volgens de functie
-      let best-patch max-one-of my-selection [ (distance-quality * [weight-distance] of myself) + (aesthetic-quality * [weight-aesthetics] of myself) + (social-similarity * [weight-social-similarity] of myself) ]
+
+
+      ;; utility functie oproepen, beste utility berekenen en dan beste kiezen voor de selectie
+      ;; utility function based on formule 1 (Brown and Robinson, 2006)
+      ;; let best-patch max-one-of my-selection [ (distance-quality ^ [weight-distance] of myself) + (aesthetic-quality ^ [weight-aesthetics] of myself) + (social-similarity ^ [weight-social-similarity] of myself) ]
+      ask my-selection [set utility (distance-quality ^ [weight-distance] of myself) + (aesthetic-quality ^ [weight-aesthetics] of myself) + (social-similarity ^ [weight-social-similarity] of myself)]
+      let best-patch max-one-of my-selection [utility]
+
 
       setxy [pxcor] of best-patch [pycor] of best-patch
 
@@ -255,6 +266,7 @@ to add-new-residents
 
 end
 
+;; neighbourhood similarity function based on formule 2 (Brown and Robinson, 2006)
 to-report social-similarity-diff [#dist-eval #dist-neighbors #aesth-eval #aesth-neighbors #social-eval #social-neighbors]
   report reduce + (map [ [dist-list aesth-list social-list] -> ( sqrt ( (dist-list - #dist-eval) ^ 2 + (aesth-list - #aesth-eval) ^ 2 + (social-list - #social-eval) ^ 2) ) ] #dist-neighbors #aesth-neighbors #social-neighbors)
 end
