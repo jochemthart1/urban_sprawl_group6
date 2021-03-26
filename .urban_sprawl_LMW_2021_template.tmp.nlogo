@@ -214,7 +214,7 @@ to add-new-residents
 
           ask my-selection
           [
-            set social-similarity ( social-similarity - lowest-similarity ) / ( highest-similarity - lowest-similarity )
+            set social-similarity ( social-similarity - lowest-similarity ) / (highest-similarity
           ]
         ]
       ]
