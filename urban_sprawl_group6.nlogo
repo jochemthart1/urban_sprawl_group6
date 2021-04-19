@@ -48,7 +48,7 @@ to setup
   reset-ticks
 
   ;; load input data elevation
-  loaddata "data/defaultdem.asc"
+  loaddata "data/defaultdem_old.asc"
   set study-area-patches patches with [ elevation > -9999 ]
   ;; use elevation as color for patches
   let minimum min [elevation] of study-area-patches
