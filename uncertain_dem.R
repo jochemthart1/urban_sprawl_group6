@@ -1,19 +1,67 @@
+library(sp)
+library(rgdal)
+library(gstat)
+library(rgeos)
+
+# set path
+setwd("D:/Studie/urban_sprawl_group6/data")  # specify proper path
+
+resids <- read.table("Sample_error.txt", header = TRUE)
+coordinates(resids) <- ~x+y
+
+# variogram model
+gres = gstat(formula = resid~1, data=resids)
+vgres = variogram (gres, boundaries = c(1:5*100, 3:10*500))
+plot(vgres)
+
+# fit variogram model
+vgmres <- vgm(nugget = 3800, psill = 9000, range = 5000, model = "Exp")
+plot(vgres, vgmres, plot.nu = T)
+vgmres <- fit.variogram(vgres, vgmres)
+plot(vgres, vgmres)
+
 # read ahn elevation data
 ahn <- readGDAL("ahn100_f.asc")
+mask <- readGDAL("mask100.asc")
+
+# ordinary kriging t.b.v. default dem
+resids.xv1 <- krige.cv(resid~1, resids, vgmres, nmax=24)
+
+# cross-validation
+str(resids.xv1)
+hist(resids.xv1$var1.pred)
+names(resids.xv1)
+mean(resids.xv1$zscore)
+sd(resids.xv1$zscore)
+hist(resids.xv1$zscore,breaks=seq(-15,15, by=1))
+
+# Bubble plot residuals
+bubble(resids.xv1, zcol = "residual", maxsize = 3, key.entries = 
+         c(-330,-200, -100,-50,0,50,100,200,330), main = 
+         "cross-validation residuals, OK" )
+
 # Add residuals to AHN and make SpatialPixelsDataFrame object
 # it is assumed that predicted residuals are in "resid"
-defaultdem <- data.frame(band1 = ahn$band1 + resid$var1.pred)
+defaultdem <- data.frame(band1 = ahn$band1 + resids.xv1$var1.pred)
 coordinates(defaultdem) <- coordinates(ahn)
 gridded(defaultdem) <- TRUE
 spplot(defaultdem, col.regions=bpy.colors())
 write.asciigrid(defaultdem, "defaultdem.asc") # write to disk
 
-outroot = "D:/mydir/mysubdir/dem" # (mind forward slashes)
-for(i in 1:100)
+# residsim maken met kriging stochastic simulation
+set.seed(12345)
+residsim <- krige(resid~1, resids, newdata=mask, vgmres, nsim=100, nmax=24)
+
+count(!is.na(residsim[1]))
+
+
+outroot = "D:/Studie/urban_sprawl_group6/data/dem" # (mind forward slashes)
+for(i in 1:2)
 {
   outname <- paste0(outroot, i, ".asc")
   outdem <- data.frame(band1 = ahn$band1 + residsim[[i]])
   coordinates(outdem) <- coordinates(ahn)
-  gridded(outdem) <- T
+  gridded(outdem) <- TRUE
+  spplot(outdem, col.regions=bpy.colors())
   write.asciigrid(outdem, outname)
 }
