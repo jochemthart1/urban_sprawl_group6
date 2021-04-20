@@ -48,7 +48,19 @@ to setup
   reset-ticks
 
   ;; load input data elevation
-  loaddata "data/dem1.asc"
+  (ifelse terrain = "fixed"
+    [
+      loaddata "data/defaultdem.asc"
+    ]
+    terrain = "uncertain"
+    [
+      loaddata word word "data/dem/dem" run-number ".asc"
+    ]
+    [
+      print "choice terrain not implemented"
+      stop
+    ])
+
   set study-area-patches patches with [ elevation > -9999 ]
   ;; use elevation as color for patches
   let minimum min [elevation] of study-area-patches
@@ -142,7 +154,8 @@ to store-output-rasters ;;observer procedure
   [
     set patches_out gis:patch-dataset percentage-built-up-surroundings
   ]
-    gis:store-dataset patches_out word word "perc_built_up_" stop-at-percent-developed ".asc"
+    gis:store-dataset patches_out word word word word word word word word "results_final/perc_builtup_"
+  stop-at-percent-developed "_" terrain "_" residential-preferences "_run_" run-number ".asc"
 
 end
 
@@ -188,9 +201,30 @@ to add-new-residents
     [
       set color red
 
-      set weight-distance mean-weight-distance
-      set weight-aesthetics mean-weight-aesthetics
-      set weight-social-similarity mean-weight-social-similarity
+      (ifelse residential-preferences = "homogeneous"
+        [
+          set weight-distance mean-weight-distance
+          set weight-aesthetics mean-weight-aesthetics
+          set weight-social-similarity mean-weight-social-similarity
+        ]
+        residential-preferences = "normal-distribution"
+        [
+          set weight-distance random-normal mean-weight-distance 0.37
+          if weight-distance < 0 [set weight-distance 0]
+          if weight-distance > 1 [set weight-distance 1]
+
+          set weight-aesthetics random-normal mean-weight-aesthetics 0.39
+          if weight-aesthetics < 0 [set weight-aesthetics 0]
+          if weight-aesthetics > 1 [set weight-aesthetics 1]
+
+          set weight-social-similarity random-normal mean-weight-social-similarity 0.37
+          if weight-social-similarity < 0 [set weight-social-similarity 0]
+          if weight-social-similarity > 1 [set weight-social-similarity 1]
+        ]
+        [
+          print "residential-preferences choice does not exist"
+          stop
+        ])
 
       ;; allocate
       let my-selection n-of 15 study-area-patches with [ count turtles-here = 0 ]
@@ -285,7 +319,7 @@ new-residents-per-tick
 new-residents-per-tick
 50
 200
-200.0
+100.0
 10
 1
 NIL
@@ -334,7 +368,7 @@ stop-at-percent-developed
 stop-at-percent-developed
 0
 90
-90.0
+15.0
 1
 1
 %
@@ -349,7 +383,7 @@ mean-weight-distance
 mean-weight-distance
 0
 1
-0.76
+0.55
 0.01
 1
 NIL
@@ -364,7 +398,7 @@ mean-weight-aesthetics
 mean-weight-aesthetics
 0
 1
-1.0
+0.54
 0.01
 1
 NIL
@@ -379,11 +413,42 @@ mean-weight-social-similarity
 mean-weight-social-similarity
 0
 1
-0.87
+0.49
 0.01
 1
 NIL
 HORIZONTAL
+
+CHOOSER
+17
+280
+155
+325
+terrain
+terrain
+"fixed" "uncertain"
+0
+
+CHOOSER
+17
+335
+169
+380
+residential-preferences
+residential-preferences
+"homogeneous" "normal-distribution"
+0
+
+INPUTBOX
+18
+395
+173
+455
+run-number
+1.0
+1
+0
+Number
 
 @#$#@#$#@
 ## WHAT IS IT?
@@ -738,7 +803,7 @@ NetLogo 6.2.0
     <enumeratedValueSet variable="stop-at-percent-developed">
       <value value="15"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="chosen-random-seed" first="1" step="1" last="100"/>
+    <steppedValueSet variable="run-number" first="1" step="1" last="2"/>
     <enumeratedValueSet variable="residential-preferences">
       <value value="&quot;normal-distribution&quot;"/>
     </enumeratedValueSet>
@@ -755,7 +820,7 @@ NetLogo 6.2.0
     <enumeratedValueSet variable="stop-at-percent-developed">
       <value value="15"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="chosen-random-seed" first="1" step="1" last="100"/>
+    <steppedValueSet variable="run-number" first="1" step="1" last="2"/>
     <enumeratedValueSet variable="residential-preferences">
       <value value="&quot;normal-distribution&quot;"/>
     </enumeratedValueSet>
@@ -772,7 +837,7 @@ NetLogo 6.2.0
     <enumeratedValueSet variable="stop-at-percent-developed">
       <value value="15"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="chosen-random-seed" first="1" step="1" last="100"/>
+    <steppedValueSet variable="run-number" first="1" step="1" last="2"/>
     <enumeratedValueSet variable="residential-preferences">
       <value value="&quot;homogeneous&quot;"/>
     </enumeratedValueSet>

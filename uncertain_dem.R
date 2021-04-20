@@ -28,11 +28,6 @@ mask <- readGDAL("mask100.asc")
 resids.xv1 <- krige.cv(resid~1, resids, vgmres, nmax=24)
 
 # cross-validation
-str(resids.xv1)
-hist(resids.xv1$var1.pred)
-names(resids.xv1)
-mean(resids.xv1$zscore)
-sd(resids.xv1$zscore)
 hist(resids.xv1$zscore,breaks=seq(-15,15, by=1))
 
 # Bubble plot residuals
@@ -52,11 +47,9 @@ write.asciigrid(defaultdem, "defaultdem.asc") # write to disk
 set.seed(12345)
 residsim <- krige(resid~1, resids, newdata=mask, vgmres, nsim=100, nmax=24)
 
-count(!is.na(residsim[1]))
 
-
-outroot = "D:/Studie/urban_sprawl_group6/data/dem" # (mind forward slashes)
-for(i in 1:2)
+outroot = "D:/Studie/urban_sprawl_group6/data/dem/dem" # (mind forward slashes)
+for(i in 1:100)
 {
   outname <- paste0(outroot, i, ".asc")
   outdem <- data.frame(band1 = ahn$band1 + residsim[[i]])
