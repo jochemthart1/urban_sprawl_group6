@@ -52,7 +52,6 @@ mean_func <- function(data) {
   mean_grid <- apply(data, 1, function(x) mean(x))
   mean_grid <- SpatialPixelsDataFrame(coordinates(deter15),
                                       as.data.frame(mean_grid))
-  spplot(mean_grid, col.regions=bpy.colors())
   return(mean_grid)
 }
 
@@ -60,7 +59,6 @@ var_func <- function(data) {
   var_grid <- apply(data, 1, function(x) var(x))
   var_grid <- SpatialPixelsDataFrame(coordinates(deter15),
                                        as.data.frame(var_grid))
-  spplot(var_grid, col.regions=bpy.colors())
   return(var_grid)
 }
 
@@ -83,4 +81,7 @@ var_fix_norm <- var_func(fix_norm)
 spplot(var_fix_norm, col.regions=bpy.colors(), main = "plot var fixed normal-dist")
 
 terrain_contrib <- 100 * ((1 - var_unc_hom) / var_unc_norm)
+spplot(terrain_contrib, col.regions=bpy.colors(), main = "plot terrain contribution %")
+
 pop_contrib <- 100 * ((1 - var_fix_norm) / var_unc_norm)
+spplot(pop_contrib, col.regions=bpy.colors(), main = "plot population contribution %")
