@@ -427,7 +427,7 @@ CHOOSER
 terrain
 terrain
 "fixed" "uncertain"
-0
+1
 
 CHOOSER
 17
@@ -445,7 +445,7 @@ INPUTBOX
 173
 455
 run-number
-1.0
+99.0
 1
 0
 Number
@@ -803,7 +803,7 @@ NetLogo 6.2.0
     <enumeratedValueSet variable="stop-at-percent-developed">
       <value value="15"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="run-number" first="1" step="1" last="2"/>
+    <steppedValueSet variable="run-number" first="1" step="1" last="100"/>
     <enumeratedValueSet variable="residential-preferences">
       <value value="&quot;normal-distribution&quot;"/>
     </enumeratedValueSet>
@@ -837,7 +837,7 @@ NetLogo 6.2.0
     <enumeratedValueSet variable="stop-at-percent-developed">
       <value value="15"/>
     </enumeratedValueSet>
-    <steppedValueSet variable="run-number" first="1" step="1" last="2"/>
+    <steppedValueSet variable="run-number" first="1" step="1" last="100"/>
     <enumeratedValueSet variable="residential-preferences">
       <value value="&quot;homogeneous&quot;"/>
     </enumeratedValueSet>
