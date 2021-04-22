@@ -2,6 +2,7 @@ library(sp)
 library(rgdal)
 library(gstat)
 library(rgeos)
+library(raster)
 
 inroot <- "D:/Studie/urban_sprawl_group6/results_final/" # change/omit as needed
 deter15 <- readGDAL(paste0(inroot, "perc_builtup_15_deterministic.asc_corrected")) # deterministic run
@@ -80,8 +81,14 @@ spplot(var_unc_norm, col.regions=bpy.colors(), main = "plot var uncertain normal
 var_fix_norm <- var_func(fix_norm)
 spplot(var_fix_norm, col.regions=bpy.colors(), main = "plot var fixed normal-dist")
 
-terrain_contrib <- 100 * ((1 - var_unc_hom) / var_unc_norm)
-spplot(terrain_contrib, col.regions=bpy.colors(), main = "plot terrain contribution %")
-
-pop_contrib <- 100 * ((1 - var_fix_norm) / var_unc_norm)
+pop_contrib <- 100*(1-var_unc_hom@data/var_unc_norm@data)
+coordinates(pop_contrib) <- coordinates(deter15)
+gridded(pop_contrib) <- T
+pop_contrib$var_grid[pop_contrib$var_grid < -100] <- -100
 spplot(pop_contrib, col.regions=bpy.colors(), main = "plot population contribution %")
+
+terrain_contrib <- 100*(1-var_fix_norm@data/var_unc_norm@data)
+coordinates(terrain_contrib) <- coordinates(deter15)
+gridded(terrain_contrib) <- T
+terrain_contrib$var_grid[terrain_contrib$var_grid < -100] <- -100
+spplot(terrain_contrib, col.regions=bpy.colors(), main = "plot terrain contribution %")
